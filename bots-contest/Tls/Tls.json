@@ -1,0 +1,11 @@
+{
+  "name": "Tls",
+  "version": "1.1",
+  "gameTypes": "Does not matter",
+  "authors": "Tls",
+  "description": "The awesome one",
+  "homepage": "",
+  "countryCodes": "ee",
+  "platform": "JVM",
+  "programmingLang": "Java 11"
+}

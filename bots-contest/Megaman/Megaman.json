@@ -1,0 +1,11 @@
+{
+  "name": "Megaman",
+  "version": "1.0",
+  "gameTypes": "melee, classic, 1v1",
+  "authors": "Kaarel",
+  "description": "Mega gamer",
+  "homepage": "",
+  "countryCodes": "ee",
+  "platform": "JVM",
+  "programmingLang": "Java 11"
+}

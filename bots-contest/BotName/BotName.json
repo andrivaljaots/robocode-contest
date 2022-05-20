@@ -1,0 +1,11 @@
+{
+  "name": "BotName",
+  "version": "1.0",
+  "gameTypes": "melee, classic, 1v1",
+  "authors": "Mikk",
+  "description": "Named bot",
+  "homepage": "",
+  "countryCodes": "ee",
+  "platform": "JVM",
+  "programmingLang": "Java 8"
+}

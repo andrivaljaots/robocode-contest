@@ -1,0 +1,11 @@
+{
+  "name": "Frenzie",
+  "version": "1.0",
+  "gameTypes": "melee, classic, 1v1",
+  "authors": "Gajali",
+  "description": "Sample bot.",
+  "homepage": "",
+  "countryCodes": "us, dk",
+  "platform": "JVM",
+  "programmingLang": "Java 11"
+}
