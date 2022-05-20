@@ -1,0 +1,11 @@
+{
+  "name": "Ooloros",
+  "version": "1.0",
+  "gameTypes": "melee, classic, 1v1",
+  "authors": "Ooloros",
+  "description": "This bot does random stuff",
+  "homepage": "",
+  "countryCodes": "ee",
+  "platform": "JVM",
+  "programmingLang": "Java 11"
+}
