@@ -5,6 +5,7 @@ import dev.robocode.tankroyale.botapi.BotInfo;
 import dev.robocode.tankroyale.botapi.Color;
 import dev.robocode.tankroyale.botapi.IBot;
 import dev.robocode.tankroyale.botapi.events.Condition;
+import dev.robocode.tankroyale.botapi.events.CustomEvent;
 import dev.robocode.tankroyale.botapi.events.HitBotEvent;
 import dev.robocode.tankroyale.botapi.events.HitWallEvent;
 import dev.robocode.tankroyale.botapi.events.ScannedBotEvent;
@@ -13,6 +14,7 @@ public class Robocop extends Bot {
 
 	boolean movingForward;
 	boolean isScanning; // flag set when scanning
+	double lastReverse = 0;
 
 	// The main method starts our bot
 	public static void main(String[] args) {
@@ -32,6 +34,20 @@ public class Robocop extends Bot {
 		setRadarColor(Color.fromString("#FFFF00"));  // dark cyan
 		setBulletColor(Color.fromString("#FFFF00")); // yellow
 		setScanColor(Color.fromString("#FFFF00"));   // light red
+
+		//		setAdjustRadarForGunTurn(false);
+		//		setAdjustRadarForBodyTurn(false);
+		setMaxRadarTurnRate(30.0);
+
+		//		addCustomEvent(
+		//				new Condition("near-wall") {
+		//					public boolean test() {
+		//						return System.currentTimeMillis() - lastReverse > 3000 && getX() < 40 && getDirection() > 90 && getDirection() < 270
+		//								|| getArenaHeight() - getY() < 40 && getDirection() > 0 && getDirection() < 180
+		//								|| getArenaWidth() - getX() < 40 && (getDirection() > 0 && getDirection() < 90 || getDirection() > 270 )
+		//								|| getY() < 40 && getDirection() > 180 && getDirection() < 360;
+		//					}
+		//				});
 
 		// Loop while as long as the bot is running
 		while (isRunning()) {
@@ -54,16 +70,16 @@ public class Robocop extends Bot {
 			waitFor(new TurnCompleteCondition(this));
 			// Note: We are still moving ahead now, but the turn is complete.
 			// Now we'll turn the other way...
-			setTurnLeft(240);
+			setTurnLeft(190);
 			if (!isScanning) {
-				setTurnGunRight(240);
+				setTurnGunLeft(190);
 			}
 			// ... and wait for the turn to finish ...
 			waitFor(new TurnCompleteCondition(this));
 			// ... then the other way ...
-			setTurnRight(360);
+			setTurnRight(190);
 			if (!isScanning) {
-				setTurnGunLeft(360);
+				setTurnGunRight(190);
 			}
 			// ... and wait for that turn to finish.
 			waitFor(new TurnCompleteCondition(this));
@@ -114,9 +130,12 @@ public class Robocop extends Bot {
 			}
 		}
 		var bearingFromGun = gunBearingTo(e.getX() + xPotentialMoved, e.getY() + yPotentialMoved);
+		//		var bearingFromRadar = radarBearingTo(e.getX(), e.getY() );
 
 		// Turn the gun toward the scanned bot
 		turnGunLeft(bearingFromGun);
+
+		//		turnRadarLeft(bearingFromRadar);
 
 		// If it is close enough, fire!
 		if (Math.abs(bearingFromGun) <= 3 && getGunHeat() == 0) {
@@ -127,6 +146,9 @@ public class Robocop extends Bot {
 		// We only need to call this if the gun (and therefore radar)
 		// are not turning. Otherwise, scan is called automatically.
 		if (Math.abs(bearingFromGun) < 5 && Math.random() > 0.5) {
+			if (this.getTurnRemaining() == 0) {
+				setTurnLeft(190);
+			}
 			rescan();
 		}
 
@@ -140,6 +162,15 @@ public class Robocop extends Bot {
 		// If we're moving into the other bot, reverse!
 		if (e.isRammed()) {
 			reverseDirection();
+		}
+	}
+
+	// A custom event occurred
+	@Override
+	public void onCustomEvent(CustomEvent e) {
+		if (e.getCondition().getName().equals("near-wall")) {
+			reverseDirection();
+			lastReverse = System.currentTimeMillis();
 		}
 	}
 
