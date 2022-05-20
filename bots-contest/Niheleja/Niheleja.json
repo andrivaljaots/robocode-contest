@@ -1,0 +1,11 @@
+{
+  "name": "Niheleja",
+  "version": "1.0",
+  "gameTypes": "melee, classic, 1v1",
+  "authors": "Kaur",
+  "description": "See bot teeb huvitavaid asju",
+  "homepage": "",
+  "countryCodes": "ee",
+  "platform": "JVM",
+  "programmingLang": "Java 11"
+}
