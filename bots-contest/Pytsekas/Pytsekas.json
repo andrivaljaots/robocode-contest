@@ -1,0 +1,11 @@
+{
+  "name": "Pytsekas",
+  "version": "666",
+  "gameTypes": "melee, classic, 1v1",
+  "authors": "Marko",
+  "description": "Pytsekas T-40",
+  "homepage": "",
+  "countryCodes": "ee",
+  "platform": "JVM",
+  "programmingLang": "Java 11"
+}
