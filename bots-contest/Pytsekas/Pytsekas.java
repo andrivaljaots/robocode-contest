@@ -1,22 +1,25 @@
 package Pytsekas;
 
-import dev.robocode.tankroyale.botapi.*;
-import dev.robocode.tankroyale.botapi.events.*;
-import java.util.Random;
-import java.util.stream.DoubleStream;
+import dev.robocode.tankroyale.botapi.Bot;
+import dev.robocode.tankroyale.botapi.BotInfo;
+import dev.robocode.tankroyale.botapi.Color;
+import dev.robocode.tankroyale.botapi.IBot;
+import dev.robocode.tankroyale.botapi.events.BulletHitBotEvent;
+import dev.robocode.tankroyale.botapi.events.Condition;
+import dev.robocode.tankroyale.botapi.events.HitBotEvent;
+import dev.robocode.tankroyale.botapi.events.HitWallEvent;
+import dev.robocode.tankroyale.botapi.events.ScannedBotEvent;
+import dev.robocode.tankroyale.botapi.events.TickEvent;
 
 public class Pytsekas extends Bot {
 
     private static final long LONG_STEP = 40000;
-    private static final long REVERSE_LIMIT = 100;
     private static final int DEATHMATCH_COUNT = 2;
     private static final int HIT_THE_WALL_ANGLE = 135;
 
     private static double DRUNKEN_DRIVE_ANGLE = 90;
 
     boolean movingForward;
-    Direction turnDirection;
-    Random random;
 
     public static void main(String[] args) {
         new Pytsekas().start();
@@ -24,15 +27,12 @@ public class Pytsekas extends Bot {
 
     Pytsekas() {
         super(BotInfo.fromFile("Pytsekas.json"));
-        this.random = new Random();
     }
 
     public void run() {
         setColors();
         while (isRunning()) {
             debug();
-
-            paintTank();
 
             setForward(LONG_STEP);
             movingForward = true;
@@ -47,6 +47,7 @@ public class Pytsekas extends Bot {
 
     @Override
     public void onTick(TickEvent tickEvent) {
+        paintTank();
         if (this.getEnemyCount() >= DEATHMATCH_COUNT) {
             fire(1);
         }
@@ -63,9 +64,7 @@ public class Pytsekas extends Bot {
 
         double bearing = bearingTo(e.getX(), e.getY());
 
-        //turnLeft(e.getSpeed() * e.getDirection());
         turnLeft(e.getSpeed() * bearing);
-        //waitFor(new TurnCompleteCondition(this));
 
         if (distanceTo(e.getX(), e.getY()) > 200) {
             waitFor(new TurnCompleteCondition(this));
@@ -81,15 +80,13 @@ public class Pytsekas extends Bot {
     public void onHitBot(HitBotEvent e) {
         hitHardWhenBearingIsGoooooooood(e.getX(), e.getY());
 
-        if (e.isRammed()) {
-            //System.out.println("get out of my WAYYY sucker!");
-            reverseDirection(Direction.NONE, 0);
-        }
+        System.out.println("get out of my WAYYY sucker!");
+        reverseDirection(Direction.RIGHT, 45);
     }
 
     @Override
     public void onHitByBullet(BulletHitBotEvent bulletHitBotEvent) {
-        reverseDirection(Direction.LEFT, 45);
+        reverseDirection(Direction.LEFT, 90);
     }
 
     public void reverseDirection(Direction direction, long angle) {
@@ -103,29 +100,17 @@ public class Pytsekas extends Bot {
         if (angle > 0) {
             if (direction.equals(Direction.LEFT)) {
                 setTurnLeft(angle);
-            } else if (direction.equals(Direction.RIGHT)) {
-                setTurnRadarLeft(angle);
+            } else {
+                setTurnRight(angle);
             }
             waitFor(new TurnCompleteCondition(this));
         }
     }
 
-    public void reverseTurn() {
-        if (turnDirection == Direction.LEFT) {
-            setTurnRight(135);
-        } else {
-            setTurnLeft(135);
-        }
-        turnDirection = (turnDirection == Direction.LEFT) ? Direction.RIGHT : Direction.LEFT;
-    }
-
-
     private void hitHardWhenBearingIsGoooooooood(double x, double y) {
         var direction = directionTo(x, y);
         var bearing = calcBearing(direction);
         var firepower = getFirepower(distanceTo(x, y));
-
-        System.out.println("hitHardWhenBearingIsGoooooooood: " + direction + ", bearing: " + bearing + ", firepower: " + firepower);
 
         if (bearing > -10 && bearing < 10) {
             fire(firepower);
@@ -174,17 +159,12 @@ public class Pytsekas extends Bot {
 
     private void debug() {
         System.out.println(
-            "STATUS enemies left: " + getEnemyCount() +
+            "STATUS: enemies left: " + getEnemyCount() +
                 ", X: " + this.getX() +
                 ", Y:" + this.getY() +
                 ", energy: " + this.getEnergy() +
                 ", gun head: " + this.getGunHeat() +
                 ", cooling rate: " + this.getGunCoolingRate());
-    }
-
-    private double getRandomBetween(int min, int max) {
-        DoubleStream doubles = random.doubles(min, max);
-        return doubles.findFirst().getAsDouble();
     }
 
     private void setColors() {
@@ -198,13 +178,13 @@ public class Pytsekas extends Bot {
     private void paintTank() {
         Color bodyColor = this.getBodyColor();
         if (bodyColor != null) {
-            Color color = this.getBodyColor().equals(Color.BLACK) ? Color.RED : Color.BLACK;
+            Color color = this.getBodyColor().equals(Color.BLACK) ? Color.WHITE : Color.BLACK;
             setBodyColor(color);
             setGunColor(color);
         }
     }
 
     private enum Direction {
-        NONE, LEFT, RIGHT;
+        LEFT, RIGHT;
     }
 }
