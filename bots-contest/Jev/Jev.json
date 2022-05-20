@@ -1,0 +1,11 @@
+{
+  "name": "Jev",
+  "version": "never kill nobody",
+  "gameTypes": "melee, classic, 1v1",
+  "authors": "Jevgeni",
+  "description": "This bot does random stuff",
+  "homepage": "",
+  "countryCodes": "ee",
+  "platform": "JVM",
+  "programmingLang": "Java 11"
+}
