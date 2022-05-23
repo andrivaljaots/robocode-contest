@@ -1,1 +1,1 @@
-java -cp ../../lib/* Random.java >nul
+java -cp ../../lib/* Random.java

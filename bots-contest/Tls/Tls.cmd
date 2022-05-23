@@ -1,1 +1,2 @@
-java -cp ../../lib/* Tls.java >nul
+set SERVER_SECRET=CJ09LwcRt1Ya9jYPXyB4IA
+java -cp ../../lib/* Tls.java
